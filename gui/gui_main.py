@@ -13,15 +13,30 @@ def new_window():
     window.geometry("300x600")
     window.title('新增')
 
-    #输入框
-    text_bol = Text(window, 
-                    bg = "light yellow",
-                    font=("Ink Free", 25),
-                    height= 1,
-                    width=10,
-                    fg = "purple"
-                    )
+    #输入框-BOL
+    bol_show_label = Label(window, text="输入 提单号：",font=("Ink Free", 20))
+    bol_show_label.pack()
+    text_bol = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_bol.pack()
+    
+    #输入框-柜号
+    container_show_label = Label(window, text="输入 柜号：",font=("Ink Free", 20))
+    container_show_label.pack()
+    text_container = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_container.pack()
+
+    #输入框-ETA
+    eta_show_label = Label(window, text="输入 ETA:",font=("Ink Free", 20))
+    eta_show_label.pack()
+    text_eta = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_eta.pack()
+    
+    #输入框-卡车公司
+    truck_show_label = Label(window, text="输入 卡车公司：",font=("Ink Free", 20))
+    truck_show_label.pack()
+    text_truck = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_truck.pack()
+
     window.mainloop()
     print("new entry")
 
@@ -53,7 +68,6 @@ view_button = Button(window, text="VIEW",
                     height=6,
                     command=view_window)
 view_button.place(x=100, y=400)
-
 
 
 window.mainloop()
