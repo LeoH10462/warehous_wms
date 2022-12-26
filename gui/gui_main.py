@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 
 window = Tk()
 window.geometry("1920x1080")
@@ -12,6 +13,13 @@ def new_window():
     window = Tk()
     window.geometry("300x600")
     window.title('新增')
+
+    #输入框-货柜客户
+    customer_show_label = Label(window, text="输入 客户：",font=("Ink Free", 20))
+    customer_show_label.pack()
+    cmb_customer = ttk.Combobox(window)
+    cmb_customer.pack()
+    cmb_customer['value'] = ('委达','整柜','泛美','泛整','彦达','彦整','空运','恒达','飞扬')
 
     #输入框-BOL
     bol_show_label = Label(window, text="输入 提单号：",font=("Ink Free", 20))
