@@ -1,16 +1,18 @@
 from tkinter import *
 from tkinter import ttk
-from data.data_bol import Bol           
+
+    
+from data_class.data_bol import Bol
 
 window = Tk()
 window.geometry("1920x1080")
 window.title("wms")
 
+myBol = Bol()
 
 #创建新提单号，柜号，eta， ----新增
 def new_window():
 
-    Bol()
     #新增---创建新窗口
     window = Tk()
     window.geometry("300x600")
@@ -22,35 +24,35 @@ def new_window():
     cmb_customer = ttk.Combobox(window)
     cmb_customer.pack()
     cmb_customer['value'] = ('委达','整柜','泛美','泛整','彦达','彦整','空运','恒达','飞扬')
-    Bol.setCustomer(cmb_customer['value'])
+    myBol.setCustomer(cmb_customer['value'])
 
     #输入框-BOL
     bol_show_label = Label(window, text="输入 提单号：",font=("Ink Free", 20))
     bol_show_label.pack()
     text_bol = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_bol.pack()
-    Bol.setmbl(text_bol)
+    myBol.setmbl(text_bol)
 
     #输入框-柜号
     container_show_label = Label(window, text="输入 柜号：",font=("Ink Free", 20))
     container_show_label.pack()
     text_container = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_container.pack()
-    Bol.setContainer(text_container)
+    myBol.setContainer(text_container)
 
     #输入框-ETA
     eta_show_label = Label(window, text="输入 ETA:",font=("Ink Free", 20))
     eta_show_label.pack()
     text_eta = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_eta.pack()
-    Bol.setEta(text_eta)
+    myBol.setEta(text_eta)
 
     #输入框-卡车公司
     truck_show_label = Label(window, text="输入 卡车公司：",font=("Ink Free", 20))
     truck_show_label.pack()
     text_truck = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_truck.pack()
-    Bol.setTruck(text_truck)
+    myBol.setTruck(text_truck)
 
     window.mainloop()
     print("new entry")
@@ -61,7 +63,7 @@ def edit_window():
 
 #显示所有货柜记录 -----查看
 def view_window():
-    Bol.printInof()
+    myBol.printInfo()
     print("view window")
 
 #对应 new_window 按键-新增
