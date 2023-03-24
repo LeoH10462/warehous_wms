@@ -1,7 +1,7 @@
 class Item:
 
-    def __init__(self, name, count, pallet, note,
-                 cost, sale, vendor, vendorInv):
+    def __init__(self, name, count=0, pallet=0, note='',
+                 cost=0, sale=0, vendor='', vendorInv=''):
             self.ItemName = name
             self.ItemCount = count
             self.ItemPallet = pallet

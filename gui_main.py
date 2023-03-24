@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import ttk
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-    
-from data_class.data_bol import Bol
+from data_bol import Bol
 
 window = Tk()
 window.geometry("1920x1080")
