@@ -1,6 +1,6 @@
-
+CUSTOMER_LIST= []
 class Item:
-
+    #每个item的名称，数量，板数，备注，成本，售价，供应商，供应商账单
     def __init__(self, name='', count=0, pallet=0, note='',
                  cost=0, sale=0, vendor='', vendorInv=''):
             self.ItemName = name
@@ -70,7 +70,7 @@ class Item:
     
 
 class Bol():
-
+    #一条货柜的后端处理基本信息，货柜号，提单号，ETA，拖柜卡车公司，备注，客户，货物列表
     def __init__(self, container='', mbl='', eta='', truck='', note='', customer=''):
         self.Container = container
         self.MBL = mbl
@@ -78,9 +78,11 @@ class Bol():
         self.Truck = truck
         self.Note = note
         self.Customer = customer
-        
-    def setAmazon(self, number):
-        self.amazon = Item()
+        self.Items = []
+
+    # 添加item到当前货柜的总货物列表
+    def addItem(self, item):
+        self.Items.append(item)
 
     def setContainer(self, contain):
         self.Container = contain

@@ -1,5 +1,5 @@
 import numpy as np
-from data_class.data_bol import Bol
+from data_bol import Bol
 
 x = np.arange(10)
 myBol = Bol("CMAU7518336","CMDUCNXD214700", "2021-11-16",
