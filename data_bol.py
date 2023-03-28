@@ -44,30 +44,10 @@ class Item:
     def setVendorInvoice(self, vendorInv):
         self.ItemVendorInvoice = vendorInv
 
-    def getName(self):
-        return self.ItemName
+    def __repr__(self):
+        return f"{self.ItemName} {self.ItemCount}pc {self.ItemPallet}P \
+${self.ItemCost} ${self.ItemSale} {self.ItemVendor}"
 
-    def getCount(self):
-        return self.ItemCount
-
-    def getPallet(self):
-        return self.ItemPallet
-
-    def getNote(self):
-        return self.ItemNote
-
-    def getCost(self):
-        return self.ItemCost
-
-    def getSale(self):
-        return self.ItemSale
-
-    def getVendor(self):
-        return self.getVendor
-
-    def getVendorInv(self):
-        return self.getVendorInv
-    
 
 class Bol():
     #一条货柜的后端处理基本信息，货柜号，提单号，ETA，拖柜卡车公司，备注，客户，货物列表
@@ -79,6 +59,10 @@ class Bol():
         self.Note = note
         self.Customer = customer
         self.Items = []
+        self.Ama_num =0
+        self.Ups_num =0
+        self.Oth_num =0
+        self.total_num = self.Ama_num + self.Ups_num + self.Oth_num
 
     # 添加item到当前货柜的总货物列表
     def addItem(self, item):
@@ -102,13 +86,20 @@ class Bol():
     def setNote(self, note):
         self.Note = note
 
-    def printInfo(self):
-        print("Customer: ["+ self.Customer + "]"
-                "\nETA: ["+ self.ETA +"]"
-                "\nMBL: ["+ self.MBL +"]"
-                "\nContainer: ["+ self.Container + "]"
-                "\nTruck: [" + self.Truck + "]"
-                "\nNote: [" + self.Note + "]")
+    def setAma_num(self, ama_num):
+        self.Ama_num = ama_num
 
-    def printTest(self):
-        print("here!")
+    def setUps_num(self, ups_num):
+        self.Ups_num = ups_num
+
+    def setOth_num(self, oth_num):
+        self.Oth_num = oth_num
+    
+
+    def printInfo(self):
+        print(f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
+[{self.Container}] [{self.Truck}] [{self.Note}] {list(self.Items)}")
+
+    def __repr__(self):
+        return f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
+[{self.Container}] [{self.Truck}] [{self.Note}] {list(self.Items)}"
