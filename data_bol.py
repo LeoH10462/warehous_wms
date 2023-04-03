@@ -22,19 +22,19 @@ class Item:
 
     # 物品总托盘数
     def setPallet(self, pallet):
-        self.ItemName = pallet
+        self.ItemPallet = pallet
 
     # 物品备注
     def setNote(self, note=""):
-        self.ItemName = note
+        self.ItemNote = note
 
     # 物品成本
     def setCost(self, cost=0):
-        self.ItemName = cost
+        self.ItemCost = cost
 
     # 物品售价
     def setSale(self, sale):
-        self.ItemName = sale
+        self.ItemSale = sale
 
     # 物品供应商（派送公司）
     def setVendor(self, vendor=""):
@@ -62,7 +62,7 @@ class Bol():
         self.Ama_num =0
         self.Ups_num =0
         self.Oth_num =0
-        self.total_num = self.Ama_num + self.Ups_num + self.Oth_num
+        self.total_num = 0
 
     # 添加item到当前货柜的总货物列表
     def addItem(self, item):
@@ -71,7 +71,7 @@ class Bol():
     def setContainer(self, contain):
         self.Container = contain
 
-    def setmbl(self, mbl):
+    def setMbl(self, mbl):
         self.MBL = mbl
 
     def setEta(self, eta):
@@ -88,13 +88,18 @@ class Bol():
 
     def setAma_num(self, ama_num):
         self.Ama_num = ama_num
+        self.update_total_num()
 
     def setUps_num(self, ups_num):
         self.Ups_num = ups_num
+        self.update_total_num()
 
     def setOth_num(self, oth_num):
         self.Oth_num = oth_num
+        self.update_total_num()
     
+    def update_total_num(self):
+        self.total_num = self.Ama_num + self.Ups_num + self.Oth_num
 
     def printInfo(self):
         print(f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
@@ -103,3 +108,28 @@ class Bol():
     def __repr__(self):
         return f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
 [{self.Container}] [{self.Truck}] [{self.Note}] {list(self.Items)}"
+
+    def pre_print(self):
+        print(f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
+[{self.Container}] [{self.Truck}] Ama:[{self.Ama_num}] UPS:[{self.Ups_num}] Oth:[{self.Oth_num}]")
+
+    def pos_print(self):
+        print(f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
+[{self.Container}] [{self.Note}] Item:[{list(self.Ama_num)}]")
+
+
+
+
+testBol = Bol()
+testBol.setTruck("FAE")
+testBol.setContainer("CMDUS123")
+testBol.setCustomer("wd")
+testBol.setMbl("123123")
+testBol.setAma_num(111)
+testBol.setUps_num(222)
+testBol.setOth_num(333)
+testBol.pre_print()
+
+
+
+
