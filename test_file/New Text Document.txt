@@ -1,0 +1,7 @@
+1406
+
+user: worker01
+
+host: DESKTOP-9REDH99
+
+database: wms_bol
