@@ -5,7 +5,6 @@ from pathlib import Path
 from tkinter import messagebox
 from tkcalendar import DateEntry
 
-
 from data_bol import Bol
 
 window = Tk()
@@ -31,7 +30,7 @@ def new_window():
     customer_show_label.pack()
     cmb_customer = ttk.Combobox(window)
     cmb_customer.pack()
-    cmb_customer['value'] = ('委达','整柜','彦达','彦整','泛美','泛整','空运','恒达','飞扬')
+    cmb_customer['value'] = ('委达','整柜','彦达','彦整','ZTT','泛美','泛整','空运','恒达','飞扬')
 
 
     #输入框-BOL
@@ -68,7 +67,7 @@ def new_window():
     # text_truck.pack()
     cmb_truck = ttk.Combobox(window)
     cmb_truck.pack()
-    cmb_truck['value'] = ('FAE', 'Ocean epic', 'DHC')
+    cmb_truck['value'] = ('FAE', 'Ocean epic', 'DHC', 'Hung Source Inc')
 
 
     #输入框-备注
@@ -79,13 +78,13 @@ def new_window():
 
 
     #输入框-amazon 数量
-    amanum_show_label = Label(window, text="输入  Amazon数量：",font=("Ink Free", 20))
+    amanum_show_label = Label(window, text="输入  Amazon数量: ",font=("Ink Free", 20))
     amanum_show_label.pack()
     text_amanum = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_amanum.pack()
 
     #输入框-ups 数量
-    upsnum_show_label = Label(window, text="输入 UPS数量：",font=("Ink Free", 20))
+    upsnum_show_label = Label(window, text="输入 UPS数量: ",font=("Ink Free", 20))
     upsnum_show_label.pack()
     text_upsnum = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_upsnum.pack()
@@ -113,6 +112,9 @@ def new_window():
         window.destroy()
 
     save_button = Button(window, text="Save", command= save_close, font=("Ink Free", 20))
+    #将bol保存到MySQL
+    #save_button = Button(window, text="Save BOL", command=lambda: save_bol(window))
+    
     save_button.pack()
 
     window.mainloop()
@@ -212,6 +214,7 @@ def pre_view_window():
     tree.pack(expand=YES, fill=BOTH)
     pre_view_windo.mainloop()
     print("view window")
+
 
 #显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
 # 需要经过edit window才能查看!!
