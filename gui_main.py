@@ -8,7 +8,7 @@ from tkcalendar import DateEntry
 from data_bol import Bol
 
 window = Tk()
-window.geometry("1920x1080")
+window.geometry("1560x1080")
 window.title("wms")
 
 #所有bol 保存到同一个list
@@ -19,7 +19,7 @@ def new_window():
 
     #新增---创建新窗口
     window = Tk()
-    window.geometry("600x1000")
+    window.geometry("600x800")
     window.title('新增')
 
     #新增--每个bol代表每条货柜
@@ -140,33 +140,33 @@ def edit_window():
     window.mainloop()
 
 def display_BOL():
-        if not myBol_list:
-            messagebox.showerror("Error", "No BOLs to display")
-            return
+    if not myBol_list:
+        messagebox.showerror("Error", "No BOLs to display")
+        return
 
-        # Create Treeview
-        tree = ttk.Treeview(window, columns=("Customer", "ETA", "MBL", "Container", "Truck"))
+    # Create Treeview
+    tree = ttk.Treeview(window, columns=("Customer", "ETA", "MBL", "Container", "Truck"))
 
-        # Configure Treeview
-        tree.heading('#0', text='ID')
-        tree.heading('Customer', text='Customer')
-        tree.heading('ETA', text='ETA')
-        tree.heading('MBL', text='MBL')
-        tree.heading('Container', text='Container')
-        tree.heading('Truck', text='Truck')
+    # Configure Treeview
+    tree.heading('#0', text='ID')
+    tree.heading('Customer', text='Customer')
+    tree.heading('ETA', text='ETA')
+    tree.heading('MBL', text='MBL')
+    tree.heading('Container', text='Container')
+    tree.heading('Truck', text='Truck')
 
-        tree.column('#0', stretch=YES, minwidth=30, width=50)
-        tree.column('Customer', stretch=YES, minwidth=50, width=100)
-        tree.column('ETA', stretch=YES, minwidth=50, width=100)
-        tree.column('MBL', stretch=YES, minwidth=50, width=100)
-        tree.column('Container', stretch=YES, minwidth=50, width=100)
-        tree.column('Truck', stretch=YES, minwidth=50, width=100)
+    tree.column('#0', stretch=YES, minwidth=30, width=50)
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
+    tree.column('ETA', stretch=YES, minwidth=50, width=100)
+    tree.column('MBL', stretch=YES, minwidth=50, width=100)
+    tree.column('Container', stretch=YES, minwidth=50, width=100)
+    tree.column('Truck', stretch=YES, minwidth=50, width=100)
 
-        # Insert data into Treeview
-        for index, eah in enumerate(myBol_list):
-            tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.ETA, eah.MBL, eah.Container, eah.Truck))
+    # Insert data into Treeview
+    for index, eah in enumerate(myBol_list):
+        tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.ETA, eah.MBL, eah.Container, eah.Truck))
 
-        tree.pack(expand=YES, fill=BOTH)
+    tree.pack(expand=YES, fill=BOTH)
 
 
 #显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他

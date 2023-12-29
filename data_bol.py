@@ -51,10 +51,11 @@ ${self.ItemCost} ${self.ItemSale} {self.ItemVendor}"
 
 class Bol():
     #一条货柜的后端处理基本信息，货柜号，提单号，ETA，拖柜卡车公司，备注，客户，货物列表
-    def __init__(self, container='', mbl='', eta='', truck='', note='', customer=''):
+    def __init__(self, container='', mbl='', eta='', dateTime= '', truck='', note='', customer=''):
         self.Container = container
         self.MBL = mbl
         self.ETA = eta
+        self.DateTime = dateTime
         self.Truck = truck
         self.Note = note
         self.Customer = customer
@@ -76,6 +77,9 @@ class Bol():
 
     def setEta(self, eta):
         self.ETA = eta
+
+    def setDateTime(self, dateTime):
+        self.DateTime = dateTime
     
     def setTruck(self, truck):
         self.Truck = truck
@@ -128,7 +132,7 @@ testBol.setMbl("123123")
 testBol.setAma_num(111)
 testBol.setUps_num(222)
 testBol.setOth_num(333)
-testBol.pre_print()
+#testBol.pre_print()
 
 
 
