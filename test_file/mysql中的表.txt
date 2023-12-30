@@ -1,0 +1,28 @@
+CREATE TABLE bol (
+    bol_id INT AUTO_INCREMENT PRIMARY KEY,
+    BOL VARCHAR(255),
+    container VARCHAR(255),
+    ETA DATE,
+    Date DATE,
+    Note TEXT,
+    Truck VARCHAR(255),
+    customer VARCHAR(255)
+);
+
+
+
+CREATE TABLE item (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    bol_id INT,
+    name VARCHAR(255),
+    count INT,
+    pallet INT,
+    item_note TEXT,
+    status VARCHAR(255),
+    cost DECIMAL(10, 2),
+    sale_price DECIMAL(10, 2),
+    vendor VARCHAR(255),
+    vendor_invoice VARCHAR(255),
+    FOREIGN KEY (bol_id) REFERENCES bol(bol_id)
+);
+

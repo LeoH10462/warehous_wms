@@ -12,3 +12,11 @@ mydb = mysql.connector.connect(
 # pc host:DESKTOP-9REDH99.frontiernet.net
 # pc user:pc98
 # pc password:14061406
+
+
+ClusterDB 
+
+zhiai71@gmail.com @kW@j.9%UN35q9.R
+
+User: worker01
+Password: 1407
