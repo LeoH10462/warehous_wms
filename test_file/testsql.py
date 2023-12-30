@@ -8,6 +8,7 @@ mydb = mysql.connector.connect(
   database="myDB"
 )
 
+
 # Create a cursor object
 cursor = mydb.cursor()
 

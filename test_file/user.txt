@@ -1,0 +1,14 @@
+mydb = mysql.connector.connect(
+  host="JialindeAir.frontiernet.net",
+  user="worker01",
+  password="14061406",
+  database="myDB"
+)
+
+# pc host:desktop-9redh99.frontiernet.net
+# pc user:pc99
+# pc password:14061406
+
+# pc host:DESKTOP-9REDH99.frontiernet.net
+# pc user:pc98
+# pc password:14061406

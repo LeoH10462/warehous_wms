@@ -7,6 +7,8 @@ from tkcalendar import DateEntry
 
 from data_bol import Bol
 
+import mysql.connector
+
 window = Tk()
 window.geometry("1560x1080")
 window.title("wms")
@@ -109,7 +111,45 @@ def new_window():
         myBol.setUps_num(int(text_upsnum.get("1.0", END).strip()))
         myBol.setOth_num(int(text_othnum.get("1.0", END).strip()))
         myBol_list.append(myBol)
-        window.destroy()
+        # window.destroy()
+
+        try:
+        # New code: Save data to database
+            bol_data = (
+                myBol.MBL if myBol.MBL else 'N/A',
+                myBol.Container if myBol.Container else 'N/A',
+                myBol.ETA if myBol.ETA else 'N/A',
+                myBol.DateTime if myBol.DateTime else 'N/A',
+                myBol.Note if myBol.Note else 'N/A',
+                myBol.Truck if myBol.Truck else 'N/A',
+                myBol.Customer if myBol.Customer else 'N/A'
+            )
+
+            mydb = mysql.connector.connect(
+                host="%",
+                user="worker01",
+                password="14061406",
+                database="myDB"
+            )
+            cursor = mydb.cursor()
+
+            # SQL query to insert data into the bol table
+            sql = "INSERT INTO bol (BOL, container, ETA, Date, Note, Truck, customer) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(sql, bol_data)
+            mydb.commit()
+
+            # Additional logic to handle item data if needed
+
+            # Close the window after saving
+            window.destroy()
+        except mysql.connector.Error as err:
+            print("Error:", err)
+        # Exception handling
+        finally:
+            if mydb.is_connected():
+                cursor.close()
+                mydb.close()
+
 
     save_button = Button(window, text="Save", command= save_close, font=("Ink Free", 20))
     #将bol保存到MySQL
@@ -169,7 +209,7 @@ def display_BOL():
     tree.pack(expand=YES, fill=BOTH)
 
 
-#显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他
+#预览：显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他
 def pre_view_window():
 
     if not myBol_list:
@@ -216,7 +256,7 @@ def pre_view_window():
     print("view window")
 
 
-#显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
+# 详细：显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
 # 需要经过edit window才能查看!!
 def pos_view_window():
     print("post view")
