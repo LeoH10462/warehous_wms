@@ -136,49 +136,55 @@ def new_window():
 def edit_window():
     print("edit window")
     window = Tk()
-    window.geometry("600x600")
+    window.geometry("600x800")
     window.title('编辑')
 
-    # 文字label
-    search_label = Label(window, text="输入 货柜号：",font=("Ink Free", 20))
+    # Container label
+    search_label = Label(window, text="输入 Container: ",font=("Ink Free", 20))
     search_label.pack()
 
-    # 输入框
+    # Container 输入框
     text_search = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_search.pack()
 
-    display_BOL()
-    
+    # Bol label
+    search_label = Label(window, text="输入 BOL: ",font=("Ink Free", 20))
+    search_label.pack()
+
+    # Bol 输入框
+    text_search = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_search.pack()
+
     window.mainloop()
 
-def display_BOL():
-    if not myBol_list:
-        messagebox.showerror("Error", "No BOLs to display")
-        return
+# def display_BOL():
+#     if not myBol_list:
+#         messagebox.showerror("Error", "No BOLs to display")
+#         return
 
-    # Create Treeview
-    tree = ttk.Treeview(window, columns=("Customer", "ETA", "MBL", "Container", "Truck"))
+#     # Create Treeview
+#     tree = ttk.Treeview(window, columns=("Customer", "ETA", "MBL", "Container", "Truck"))
 
-    # Configure Treeview
-    tree.heading('#0', text='ID')
-    tree.heading('Customer', text='Customer')
-    tree.heading('ETA', text='ETA')
-    tree.heading('MBL', text='MBL')
-    tree.heading('Container', text='Container')
-    tree.heading('Truck', text='Truck')
+#     # Configure Treeview
+#     tree.heading('#0', text='ID')
+#     tree.heading('Customer', text='Customer')
+#     tree.heading('ETA', text='ETA')
+#     tree.heading('MBL', text='MBL')
+#     tree.heading('Container', text='Container')
+#     tree.heading('Truck', text='Truck')
 
-    tree.column('#0', stretch=YES, minwidth=30, width=50)
-    tree.column('Customer', stretch=YES, minwidth=50, width=100)
-    tree.column('ETA', stretch=YES, minwidth=50, width=100)
-    tree.column('MBL', stretch=YES, minwidth=50, width=100)
-    tree.column('Container', stretch=YES, minwidth=50, width=100)
-    tree.column('Truck', stretch=YES, minwidth=50, width=100)
+#     tree.column('#0', stretch=YES, minwidth=30, width=50)
+#     tree.column('Customer', stretch=YES, minwidth=50, width=100)
+#     tree.column('ETA', stretch=YES, minwidth=50, width=100)
+#     tree.column('MBL', stretch=YES, minwidth=50, width=100)
+#     tree.column('Container', stretch=YES, minwidth=50, width=100)
+#     tree.column('Truck', stretch=YES, minwidth=50, width=100)
 
-    # Insert data into Treeview
-    for index, eah in enumerate(myBol_list):
-        tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.ETA, eah.MBL, eah.Container, eah.Truck))
+#     # Insert data into Treeview
+#     for index, eah in enumerate(myBol_list):
+#         tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.ETA, eah.MBL, eah.Container, eah.Truck))
 
-    tree.pack(expand=YES, fill=BOTH)
+#     tree.pack(expand=YES, fill=BOTH)
 
 
 #预览：显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他
@@ -198,9 +204,6 @@ def pre_view_window():
     tree.heading('Note', text='Note')
     tree.heading('Truck', text='Truck')
     tree.heading('Customer', text='Customer')
-
-
-
 
     #tree.column('#0', stretch=YES, minwidth=30, width=50)
     tree.column('Bol', stretch=YES, minwidth=50, width=100)
@@ -250,6 +253,8 @@ edit_button = Button(window, text="EDIT",
                     height=6,
                     command=edit_window)
 edit_button.place(x=700, y=100)
+
+
 
 #对应 pre_view_window 按键-查看
 view_button = Button(window, text="PRE VIEW",
