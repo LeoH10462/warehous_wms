@@ -6,8 +6,11 @@ from tkinter import messagebox
 from tkcalendar import DateEntry
 
 from data_bol import Bol
-
-import mysql.connector
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+from datetime import datetime    # Import datetime
+import mongoDB as mdb
+#import mysql.connector
 
 window = Tk()
 window.geometry("1560x1080")
@@ -18,6 +21,11 @@ myBol_list = []
 
 #创建新提单号，柜号，eta， ----新增
 def new_window():
+
+    # 连接到mongoDB, wms为
+    client = mdb.get_client()
+    db = client['wms']
+    bol_collection = db['bol']
 
     #新增---创建新窗口
     window = Tk()
@@ -32,7 +40,7 @@ def new_window():
     customer_show_label.pack()
     cmb_customer = ttk.Combobox(window)
     cmb_customer.pack()
-    cmb_customer['value'] = ('委达','整柜','彦达','彦整','ZTT','泛美','泛整','空运','恒达','飞扬')
+    cmb_customer['value'] = ('委达','委整','彦达','彦整','ZTT','九猫','猫整','空运','恒达','飞扬')
 
 
     #输入框-BOL
@@ -111,53 +119,17 @@ def new_window():
         myBol.setUps_num(int(text_upsnum.get("1.0", END).strip()))
         myBol.setOth_num(int(text_othnum.get("1.0", END).strip()))
         myBol_list.append(myBol)
-        # window.destroy()
 
-        try:
-        # New code: Save data to database
-            bol_data = (
-                myBol.MBL if myBol.MBL else 'N/A',
-                myBol.Container if myBol.Container else 'N/A',
-                myBol.ETA if myBol.ETA else 'N/A',
-                myBol.DateTime if myBol.DateTime else 'N/A',
-                myBol.Note if myBol.Note else 'N/A',
-                myBol.Truck if myBol.Truck else 'N/A',
-                myBol.Customer if myBol.Customer else 'N/A'
-            )
-
-            mydb = mysql.connector.connect(
-                host="%",
-                user="worker01",
-                password="14061406",
-                database="myDB"
-            )
-            cursor = mydb.cursor()
-
-            # SQL query to insert data into the bol table
-            sql = "INSERT INTO bol (BOL, container, ETA, Date, Note, Truck, customer) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(sql, bol_data)
-            mydb.commit()
-
-            # Additional logic to handle item data if needed
-
-            # Close the window after saving
-            window.destroy()
-        except mysql.connector.Error as err:
-            print("Error:", err)
-        # Exception handling
-        finally:
-            if mydb.is_connected():
-                cursor.close()
-                mydb.close()
+        # add to database at mongoDB 
+        mdb.insert_bol(myBol)
+        window.destroy()
 
 
     save_button = Button(window, text="Save", command= save_close, font=("Ink Free", 20))
-    #将bol保存到MySQL
-    #save_button = Button(window, text="Save BOL", command=lambda: save_bol(window))
-    
     save_button.pack()
 
     window.mainloop()
+
 
 
 #对当前货柜单所有货物进行记录，汇总，动向统计，eg： ups 几箱几板； 亚马逊 编号，卡派记录-----编辑
@@ -212,45 +184,46 @@ def display_BOL():
 #预览：显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他
 def pre_view_window():
 
-    if not myBol_list:
-        messagebox.showerror("Error", "No BOLs to display")
-        return
-
     pre_view_windo = Tk()
     pre_view_windo.title("Pre-Table View")
     # Create Treeview
-    tree = ttk.Treeview(pre_view_windo, columns=("Customer", "MBL", "Container", "Note", "ETA", "Truck", "Total_num", "Amazon_num", "UPS_num", "Other_num"))
+    tree = ttk.Treeview(pre_view_windo, columns=("Bol", "Container", "ETA", "Note", "Truck", "Customer"), show='headings')
 
     # Configure Treeview
-    tree.heading('#0', text='ID')
-    tree.heading('Customer', text='Customer')
-    tree.heading('MBL', text='MBL')
+    #tree.heading('#0', text='ID')
+    
+    tree.heading('Bol', text='MBL')
     tree.heading('Container', text='Container')
-    tree.heading('Note', text='Note')
     tree.heading('ETA', text='ETA')
+    tree.heading('Note', text='Note')
     tree.heading('Truck', text='Truck')
-    tree.heading('Amazon_num', text='Amazon Num')
-    tree.heading('UPS_num', text='UPS Num')
-    tree.heading('Other_num', text='Other Num')
-    tree.heading('Total_num', text='Total Num')
+    tree.heading('Customer', text='Customer')
 
-    tree.column('#0', stretch=YES, minwidth=30, width=50)
-    tree.column('Customer', stretch=YES, minwidth=50, width=100)
-    tree.column('MBL', stretch=YES, minwidth=50, width=100)
+
+
+
+    #tree.column('#0', stretch=YES, minwidth=30, width=50)
+    tree.column('Bol', stretch=YES, minwidth=50, width=100)
     tree.column('Container', stretch=YES, minwidth=50, width=100)
-    tree.column('Note', stretch=YES, minwidth=50, width=100)
     tree.column('ETA', stretch=YES, minwidth=50, width=100)
+    tree.column('Note', stretch=YES, minwidth=50, width=100)
     tree.column('Truck', stretch=YES, minwidth=50, width=100)
-    tree.column('Amazon_num', stretch=YES, minwidth=50, width=100)
-    tree.column('UPS_num', stretch=YES, minwidth=50, width=100)
-    tree.column('Other_num', stretch=YES, minwidth=50, width=100)
-    tree.column('Total_num', stretch=YES, minwidth=50, width=100)
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
 
-    # Insert data into Treeview
-    for index, eah in enumerate(myBol_list):
-        total_num = eah.Ama_num + eah.Ups_num + eah.Oth_num
-        tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.MBL, eah.Container, eah.Note, eah.ETA, eah.Truck, eah.Ama_num, eah.Ups_num, eah.Oth_num, total_num))
 
+
+    # Insert data into Treeview, 显示 myBol_list 中所有货柜记录的信息，包括客户，MBL，柜，备注，每个item明细，数量，几板
+    # for index, eah in enumerate(myBol_list):
+    #     total_num = eah.Ama_num + eah.Ups_num + eah.Oth_num
+    #     tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.MBL, eah.Container, eah.Note, eah.ETA, eah.Truck, eah.Ama_num, eah.Ups_num, eah.Oth_num, total_num))
+
+    bol_data = mdb.get_all_bols_by_eta()
+
+    # Insert data into Treeview, 显示mongoDB 中所有货柜记录的信息，包括客户，MBL，柜，备注，每个item明细，数量，几�
+    for bol in bol_data:
+        #total_num = bol['Ama_num'] + bol['Ups_num'] + bol['Oth_num']
+        tree.insert("", END, text=str(bol['_id']), values=(bol.get('Customer', ''), bol.get('MBL', ''), bol.get('Container',''), bol.get('Note',''), bol.get('ETA',''), bol.get('Truck',''), bol.get('Ama_num',''), bol.get('Ups_num',''), bol.get('Oth_num',""), bol.get('total_num','')))
+    
     tree.pack(expand=YES, fill=BOTH)
     pre_view_windo.mainloop()
     print("view window")
@@ -259,6 +232,9 @@ def pre_view_window():
 # 详细：显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
 # 需要经过edit window才能查看!!
 def pos_view_window():
+
+    pre_view_windo = Tk()
+    pre_view_windo.title("Post-Table View")
     print("post view")
 
 #对应 new_window 按键-新增
