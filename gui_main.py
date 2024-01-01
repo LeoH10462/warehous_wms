@@ -13,7 +13,7 @@ import mongoDB as mdb
 #import mysql.connector
 
 window = Tk()
-window.geometry("1560x1080")
+window.geometry("1200x900")
 window.title("wms")
 
 #所有bol 保存到同一个list
@@ -40,30 +40,27 @@ def new_window():
     customer_show_label.pack()
     cmb_customer = ttk.Combobox(window)
     cmb_customer.pack()
-    cmb_customer['value'] = ('委达','委整','彦达','彦整','ZTT','九猫','猫整','空运','恒达','飞扬')
+    cmb_customer['value'] = ('委达','委整','彦达','彦整','ZTT',
+                             '九猫','猫整','空运','恒达','飞扬')
 
 
     #输入框-BOL
     bol_show_label = Label(window, text="输入 提单号：",font=("Ink Free", 20))
     bol_show_label.pack()
-    text_bol = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_bol = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_bol.pack()
 
 
     #输入框-柜号
     container_show_label = Label(window, text="输入 柜号：",font=("Ink Free", 20))
     container_show_label.pack()
-    text_container = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_container = Text(window, bg = "light yellow", 
+                          font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_container.pack()
 
 
     #输入框-ETA 
-    '''
-    # eta_show_label = Label(window, text="输入 ETA:",font=("Ink Free", 20))
-    # eta_show_label.pack()
-    # text_eta = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
-    # text_eta.pack()
-    # myBol.setEta(text_eta)'''
     eta_show_label = Label(window, text="输入 ETA:",font=("Arial", 20))
     eta_show_label.pack()
     date_eta = DateEntry(window, bg="light yellow", fg="purple", font=("Arial", 25))
@@ -73,8 +70,7 @@ def new_window():
     #输入框-卡车公司
     truck_show_label = Label(window, text="输入 卡车公司：",font=("Ink Free", 20))
     truck_show_label.pack()
-    # text_truck = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
-    # text_truck.pack()
+
     cmb_truck = ttk.Combobox(window)
     cmb_truck.pack()
     cmb_truck['value'] = ('FAE', 'Ocean epic', 'DHC', 'Hung Source Inc')
@@ -83,27 +79,31 @@ def new_window():
     #输入框-备注
     note_show_label = Label(window, text="输入 备注：",font=("Ink Free", 20))
     note_show_label.pack()
-    text_note = Text(window, bg = "light yellow", font=("Ink Free", 15), height= 4, width=35, fg = "purple")
+    text_note = Text(window, bg = "light yellow", 
+                     font=("Ink Free", 15), height= 4, width=35, fg = "purple")
     text_note.pack()
 
 
     #输入框-amazon 数量
     amanum_show_label = Label(window, text="输入  Amazon数量: ",font=("Ink Free", 20))
     amanum_show_label.pack()
-    text_amanum = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_amanum = Text(window, bg = "light yellow", 
+                       font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_amanum.pack()
 
     #输入框-ups 数量
     upsnum_show_label = Label(window, text="输入 UPS数量: ",font=("Ink Free", 20))
     upsnum_show_label.pack()
-    text_upsnum = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_upsnum = Text(window, bg = "light yellow", 
+                       font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_upsnum.pack()
 
 
     #输入框-other 数量
     othnum_show_label = Label(window, text="输入 其他数量：",font=("Ink Free", 20))
     othnum_show_label.pack()
-    text_othnum = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    text_othnum = Text(window, bg = "light yellow", 
+                       font=("Ink Free", 25), height= 1, width=10, fg = "purple")
     text_othnum.pack()
 
 
@@ -115,13 +115,24 @@ def new_window():
         myBol.setEta(date_eta.get())
         myBol.setTruck(cmb_truck.get())
         myBol.setNote(text_note.get("1.0", END).strip())
-        myBol.setAma_num(int(text_amanum.get("1.0", END).strip()))
-        myBol.setUps_num(int(text_upsnum.get("1.0", END).strip()))
-        myBol.setOth_num(int(text_othnum.get("1.0", END).strip()))
+
+        # Helper function to safely convert text to int, defaulting to 0
+        # 如果ama, ups, other 为空，则默认为0
+        def safe_int(text):
+            try:
+                return int(text) if text else 0
+            except ValueError:
+                return 0
+        myBol.setAma_num(safe_int(text_amanum.get("1.0", END).strip()))
+        myBol.setUps_num(safe_int(text_upsnum.get("1.0", END).strip()))
+        myBol.setOth_num(safe_int(text_othnum.get("1.0", END).strip()))
+
         myBol_list.append(myBol)
 
         # add to database at mongoDB 
         mdb.insert_bol(myBol)
+
+        print(type(date_eta.get()))
         window.destroy()
 
 
@@ -133,58 +144,136 @@ def new_window():
 
 
 #对当前货柜单所有货物进行记录，汇总，动向统计，eg： ups 几箱几板； 亚马逊 编号，卡派记录-----编辑
-def edit_window():
-    print("edit window")
+def search_window():
+    
     window = Tk()
-    window.geometry("600x800")
-    window.title('编辑')
+    window.geometry("600x600")
+    window.title('搜索')
 
     # Container label
     search_label = Label(window, text="输入 Container: ",font=("Ink Free", 20))
     search_label.pack()
 
     # Container 输入框
-    text_search = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
-    text_search.pack()
+    container_search = Text(window, bg = "light yellow", 
+                            font=("Ink Free", 25), height= 1, width=15, fg = "purple")
+    container_search.pack()
 
     # Bol label
-    search_label = Label(window, text="输入 BOL: ",font=("Ink Free", 20))
+    search_label = Label(window, text="输入 BOL: ", font=("Ink Free", 20))
     search_label.pack()
 
     # Bol 输入框
-    text_search = Text(window, bg = "light yellow", font=("Ink Free", 25), height= 1, width=10, fg = "purple")
-    text_search.pack()
+    bol_search = Text(window, bg = "light yellow", 
+                      font=("Ink Free", 25), height= 1, width=20, fg = "purple")
+    bol_search.pack()
+
+    def search_button():
+        bol = bol_search.get("1.0", END).strip()
+        container = container_search.get("1.0", END).strip()
+
+        #搜索 bol和柜号
+        #found = mdb.search_bol_container(bol, container)  
+
+        #测试用，仅搜bol
+        found = mdb.search_bol(bol)
+
+        if found:
+            #messagebox.showinfo("Success", "BOL found")
+            edit_add_window(bol, container)
+        else:
+            messagebox.showerror("Error", "BOL or Container incorrect!")
+
+    Button(window, text="Search", command=search_button, font=("Ink Free", 20)).pack()
+    window.mainloop()
+
+
+# after search success, add or edit info in new window
+def edit_add_window(bol, container):
+    window = Tk()
+    window.geometry("1200x600")
+    window.title('编辑')
+
+    # Create a frame to hold the buttons
+    button_frame = Frame(window)
+    button_frame.pack(anchor='n', pady=20)
+
+    Button(button_frame, text="Add new", font=("Ink Free", 20)).grid(row=0, column=0, padx=10, pady=10)
+    Button(button_frame, text="Edit exist", font=("Ink Free", 20)).grid(row=0, column=1, padx=10, pady=10)
+
+    # Create Treeview显示title
+    tree = ttk.Treeview(window, columns=("Customer", "Bol", "Container", 
+                                         "ETA", "Truck", "Note"), show='headings')
+    tree.heading('Customer', text='Customer')
+    tree.heading('Bol', text='MBL')
+    tree.heading('Container', text='Container')
+    tree.heading('ETA', text='ETA')
+    tree.heading('Note', text='Note')
+    tree.heading('Truck', text='Truck')
+    
+
+    #tree.column('#0', stretch=YES, minwidth=30, width=50)
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
+    tree.column('Bol', stretch=YES, minwidth=50, width=100)
+    tree.column('Container', stretch=YES, minwidth=50, width=100)
+    tree.column('ETA', stretch=YES, minwidth=50, width=100)
+    tree.column('Note', stretch=YES, minwidth=50, width=100)
+    tree.column('Truck', stretch=YES, minwidth=50, width=100)
+
+    #获取document 内容
+    bol_data = mdb.get_bol(bol)
+    print(bol_data)
+
+    #显示内容
+    if bol_data:
+        tree.insert("", END, values=(
+            bol_data.get('Customer', ''), 
+            bol_data.get('Bol', ''), 
+            bol_data.get('Container', ''), 
+            bol_data.get('ETA', ''), 
+            bol_data.get('Truck', ''), 
+            bol_data.get('Note', '')))
+        
+        # Check if there are items and insert them as children of the main document
+        if 'Items' in bol_data and isinstance(bol_data['Items'], list):
+            for item in bol_data['Items']:
+                tree.insert("", END, values=(
+                    'Item: ' + item.get('name', ''),
+                    'Count: ' + str(item.get('count', 0)),
+                    'Pallet: ' + str(item.get('pallet', 0)),
+                    # Add other item details as needed
+                ))
+
+    tree.pack(expand=YES, fill=BOTH)
 
     window.mainloop()
 
-# def display_BOL():
-#     if not myBol_list:
-#         messagebox.showerror("Error", "No BOLs to display")
-#         return
+#显示所有货柜记录 -----客户，MBL，柜，期，，备注，亚，UPS，其他
+def display_BOL(window):
 
-#     # Create Treeview
-#     tree = ttk.Treeview(window, columns=("Customer", "ETA", "MBL", "Container", "Truck"))
+    # Create Treeview
+    tree = ttk.Treeview(window, columns=("Customer", "Bol", "Container", 
+                                         "ETA", "Truck", "Note"), show='headings')
 
-#     # Configure Treeview
-#     tree.heading('#0', text='ID')
-#     tree.heading('Customer', text='Customer')
-#     tree.heading('ETA', text='ETA')
-#     tree.heading('MBL', text='MBL')
-#     tree.heading('Container', text='Container')
-#     tree.heading('Truck', text='Truck')
+    # Configure Treeview
+    #tree.heading('#0', text='ID')
+    tree.heading('Customer', text='Customer')
+    tree.heading('Bol', text='MBL')
+    tree.heading('Container', text='Container')
+    tree.heading('ETA', text='ETA')
+    tree.heading('Note', text='Note')
+    tree.heading('Truck', text='Truck')
+    
 
-#     tree.column('#0', stretch=YES, minwidth=30, width=50)
-#     tree.column('Customer', stretch=YES, minwidth=50, width=100)
-#     tree.column('ETA', stretch=YES, minwidth=50, width=100)
-#     tree.column('MBL', stretch=YES, minwidth=50, width=100)
-#     tree.column('Container', stretch=YES, minwidth=50, width=100)
-#     tree.column('Truck', stretch=YES, minwidth=50, width=100)
-
-#     # Insert data into Treeview
-#     for index, eah in enumerate(myBol_list):
-#         tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.ETA, eah.MBL, eah.Container, eah.Truck))
-
-#     tree.pack(expand=YES, fill=BOTH)
+    #tree.column('#0', stretch=YES, minwidth=30, width=50)
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
+    tree.column('Bol', stretch=YES, minwidth=50, width=100)
+    tree.column('Container', stretch=YES, minwidth=50, width=100)
+    tree.column('ETA', stretch=YES, minwidth=50, width=100)
+    tree.column('Note', stretch=YES, minwidth=50, width=100)
+    tree.column('Truck', stretch=YES, minwidth=50, width=100)
+    
+    tree.pack(expand=YES, fill=BOTH)
 
 
 #预览：显示所有货柜记录 -----查看pre_table, 客户，MBL，柜，期，，备注，亚，UPS，其他
@@ -192,44 +281,41 @@ def pre_view_window():
 
     pre_view_windo = Tk()
     pre_view_windo.title("Pre-Table View")
-    # Create Treeview
-    tree = ttk.Treeview(pre_view_windo, columns=("Bol", "Container", "ETA", "Note", "Truck", "Customer"), show='headings')
+    pre_view_windo.geometry("1000x600")
 
-    # Configure Treeview
-    #tree.heading('#0', text='ID')
-    
+    # Create Treeview
+    tree = ttk.Treeview(pre_view_windo, columns=("Customer", "Bol", "Container", 
+                                                 "ETA", "Truck", "Note"), show='headings')
+
+    # Configure Treeview columns
+    tree.heading('Customer', text='Customer')
     tree.heading('Bol', text='MBL')
     tree.heading('Container', text='Container')
     tree.heading('ETA', text='ETA')
     tree.heading('Note', text='Note')
     tree.heading('Truck', text='Truck')
-    tree.heading('Customer', text='Customer')
 
-    #tree.column('#0', stretch=YES, minwidth=30, width=50)
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
     tree.column('Bol', stretch=YES, minwidth=50, width=100)
     tree.column('Container', stretch=YES, minwidth=50, width=100)
     tree.column('ETA', stretch=YES, minwidth=50, width=100)
     tree.column('Note', stretch=YES, minwidth=50, width=100)
     tree.column('Truck', stretch=YES, minwidth=50, width=100)
-    tree.column('Customer', stretch=YES, minwidth=50, width=100)
 
-
-
-    # Insert data into Treeview, 显示 myBol_list 中所有货柜记录的信息，包括客户，MBL，柜，备注，每个item明细，数量，几板
-    # for index, eah in enumerate(myBol_list):
-    #     total_num = eah.Ama_num + eah.Ups_num + eah.Oth_num
-    #     tree.insert("", index, text=str(index + 1), values=(eah.Customer, eah.MBL, eah.Container, eah.Note, eah.ETA, eah.Truck, eah.Ama_num, eah.Ups_num, eah.Oth_num, total_num))
-
+    # Insert data into Treeview
     bol_data = mdb.get_all_bols_by_eta()
-
-    # Insert data into Treeview, 显示mongoDB 中所有货柜记录的信息，包括客户，MBL，柜，备注，每个item明细，数量，几�
     for bol in bol_data:
-        #total_num = bol['Ama_num'] + bol['Ups_num'] + bol['Oth_num']
-        tree.insert("", END, text=str(bol['_id']), values=(bol.get('Customer', ''), bol.get('MBL', ''), bol.get('Container',''), bol.get('Note',''), bol.get('ETA',''), bol.get('Truck',''), bol.get('Ama_num',''), bol.get('Ups_num',''), bol.get('Oth_num',""), bol.get('total_num','')))
-    
+        tree.insert("", END, values=(
+            bol.get('Customer', ''), 
+            bol.get('Bol', ''), 
+            bol.get('Container', ''), 
+            bol.get('ETA', ''), 
+            bol.get('Truck', ''), 
+            bol.get('Note', '')))
+
     tree.pack(expand=YES, fill=BOTH)
+
     pre_view_windo.mainloop()
-    print("view window")
 
 
 # 详细：显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
@@ -247,11 +333,11 @@ new_button = Button(window, text="NEW",
                     command=new_window)
 new_button.place(x=100, y=100)
 
-#对应 edit_window 按键-编辑
+#对应 search_window 按键-编辑
 edit_button = Button(window, text="EDIT",
                     width=50,
                     height=6,
-                    command=edit_window)
+                    command=search_window)
 edit_button.place(x=700, y=100)
 
 

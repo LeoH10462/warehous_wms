@@ -172,6 +172,70 @@ def search_bol(bol_number):
 
     client.close()
 
+#overload func, 
+def search_bol(bol_number):
+
+    client = get_client()
+    db = client['wms']
+    bol_collection = db['bol']
+
+    # Count documents
+    try:
+        query = {"Bol": bol_number}
+        document = bol_collection.find_one(query)
+
+        if document:
+            return True
+        else:
+            return False
+    finally:
+        client.close()
+
+
+#search document by container and bol number 在edit window 中使用
+def search_bol_container(bol, container):
+    client = get_client()
+    db = client['wms']
+    bol_collection = db['bol']
+
+    try:
+        query = {"Bol": bol, "Container": container}
+        document = bol_collection.find_one(query)
+
+        if document:
+            return True
+        else:
+            return False
+    finally:
+        client.close()
+
+#return document by container and bol number 在edit window 中使用
+def get_bol_container(bol, container):
+    client = get_client()
+    db = client['wms']
+    bol_collection = db['bol']
+    
+    try:
+        query = {"Bol": bol, "Container": container}
+        document = bol_collection.find_one(query)
+        return document
+    finally:
+        client.close()
+
+# return document by bol number 在pre_view window 中使用
+def get_bol(bol):
+    client = get_client()
+    db = client['wms']
+    bol_collection = db['bol']
+
+    try:
+        query = {"Bol": bol}
+        document = bol_collection.find_one(query)
+        return document
+    finally:
+        client.close()
+
+
 # return all bols stored in bol document 在pre_view window 中使用
 def get_all_bols():
     client = get_client()

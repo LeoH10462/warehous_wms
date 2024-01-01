@@ -158,7 +158,7 @@ class Bol():
         return self.Note
     
     # ama_num ama数量
-    def setAma_num(self, ama_num):
+    def setAma_num(self, ama_num=0):
         self.Ama_num = ama_num
         self.update_total_num()
 
@@ -166,7 +166,7 @@ class Bol():
         return self.Ama_num
     
     # ups_num ups数量
-    def setUps_num(self, ups_num):
+    def setUps_num(self, ups_num=0):
         self.Ups_num = ups_num
         self.update_total_num()
     
@@ -174,7 +174,7 @@ class Bol():
         return self.Ups_num
     
     # oth_num 其他数量（自提，改UPS，改Ama，客户发送，已发送）
-    def setOth_num(self, oth_num):
+    def setOth_num(self, oth_num=0):
         self.Oth_num = oth_num
         self.update_total_num()
     
@@ -207,16 +207,6 @@ class Bol():
 
 
 
-
-testBol = Bol()
-testBol.setTruck("FAE")
-testBol.setContainer("CMDUS123")
-testBol.setCustomer("wd")
-testBol.setMbl("123123")
-testBol.setAma_num(111)
-testBol.setUps_num(222)
-testBol.setOth_num(333)
-#testBol.pre_print()
 
 
 
