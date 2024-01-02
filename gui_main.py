@@ -115,18 +115,10 @@ def new_window():
         myBol.setEta(date_eta.get())
         myBol.setTruck(cmb_truck.get())
         myBol.setNote(text_note.get("1.0", END).strip())
-
-        # Helper function to safely convert text to int, defaulting to 0
-        # 如果ama, ups, other 为空，则默认为0
-        def safe_int(text):
-            try:
-                return int(text) if text else 0
-            except ValueError:
-                return 0
         myBol.setAma_num(safe_int(text_amanum.get("1.0", END).strip()))
         myBol.setUps_num(safe_int(text_upsnum.get("1.0", END).strip()))
         myBol.setOth_num(safe_int(text_othnum.get("1.0", END).strip()))
-
+        
         myBol_list.append(myBol)
 
         # add to database at mongoDB 
@@ -142,6 +134,14 @@ def new_window():
     window.mainloop()
 
 
+# Helper function to safely convert text to int, defaulting to 0
+# 如果ama, ups, other 为空，则默认为0
+def safe_int(text):
+    try:
+        return int(text) if text else 0
+    except ValueError:
+        return 0
+    
 
 #对当前货柜单所有货物进行记录，汇总，动向统计，eg： ups 几箱几板； 亚马逊 编号，卡派记录-----编辑
 def search_window():
@@ -283,6 +283,10 @@ def pre_view_window():
     pre_view_windo.title("Pre-Table View")
     pre_view_windo.geometry("1000x600")
 
+    # Customize the Treeview Style
+    style = ttk.Style()
+    style.configure("Treeview", background="white", fieldbackground="white")
+
     # Create Treeview
     tree = ttk.Treeview(pre_view_windo, columns=("Customer", "Bol", "Container", 
                                                  "ETA", "Truck", "Note"), show='headings')
@@ -313,8 +317,12 @@ def pre_view_window():
             bol.get('Truck', ''), 
             bol.get('Note', '')))
 
-    tree.pack(expand=YES, fill=BOTH)
+    # Add a scrollbar
+    scrollbar = ttk.Scrollbar(pre_view_windo, orient="vertical", command=tree.yview)
+    scrollbar.pack(side='right', fill='y')
+    tree.configure(yscrollcommand=scrollbar.set)
 
+    tree.pack(expand=YES, fill=BOTH)
     pre_view_windo.mainloop()
 
 

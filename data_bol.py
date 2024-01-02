@@ -1,3 +1,5 @@
+from datetime import datetime
+
 CUSTOMER_LIST= []
 
 # 此Item
@@ -124,14 +126,14 @@ class Bol():
     
     # eta 预计到达日期
     def setEta(self, eta):
-        self.ETA = eta
+        self.ETA = datetime.strptime(eta, '%m/%d/%y')
 
     def getEta(self):
         return self.ETA
     
     # dateTime 柜子到仓日 or 卸柜日
     def setDateTime(self, dateTime):
-        self.DateTime = dateTime
+        self.DateTime = datetime.strptime(dateTime, '%m/%d/%y')
     
     def getDateTime(self):
         return self.DateTime
@@ -188,6 +190,15 @@ class Bol():
     def getTotal_num(self):
         return self.total_num
     
+    # helper funtion for converting 'mm/dd/yy' format to datetime object
+    def conver_date(input_date):
+        # Convert 'mm/dd/yy' format to datetime object
+        try:
+            eta_date = datetime.strptime(input_date, '%m/%d/%y')
+            print("ETA date: ", eta_date, " Type: ", type(eta_date))
+        except ValueError as e:
+            print("Error converting ETA to date:", e)
+
     # 单个提单信息列表
     def printInfo(self):
         print(f"Customer: [{self.Customer}] [{self.ETA}] [{self.MBL}] \
