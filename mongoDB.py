@@ -154,23 +154,23 @@ def update_add_item(bol_number="", name="", count=0, pallet=0,
 
 # 查， 搜索某个bol or container 号，显示整个bol信息-------------------------------
 # Specify the BOL number you want to search for
-def search_bol(bol_number):
+# def search_bol(bol_number):
 
-    client = get_client()
-    db = client['wms']
-    bol_collection = db['bol']
+#     client = get_client()
+#     db = client['wms']
+#     bol_collection = db['bol']
 
-    # Count documents
-    document_count = bol_collection.count_documents({"BOL": bol_number})
+#     # Count documents
+#     document_count = bol_collection.count_documents({"BOL": bol_number})
 
-    if document_count > 0:
-        documents = bol_collection.find({"BOL": bol_number})
-        for doc in documents:
-            print(doc)
-    else:
-        print("No documents found with BOL number", bol_number)
+#     if document_count > 0:
+#         documents = bol_collection.find({"BOL": bol_number})
+#         for doc in documents:
+#             print(doc)
+#     else:
+#         print("No documents found with BOL number", bol_number)
 
-    client.close()
+#     client.close()
 
 #overload func, 
 def search_bol(bol_number):

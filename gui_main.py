@@ -6,6 +6,7 @@ from tkinter import messagebox
 from tkcalendar import DateEntry
 
 from data_bol import Bol
+from data_bol import Item
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime    # Import datetime
@@ -198,8 +199,11 @@ def edit_add_window(bol, container):
     button_frame = Frame(window)
     button_frame.pack(anchor='n', pady=20)
 
-    Button(button_frame, text="Add new", font=("Ink Free", 20)).grid(row=0, column=0, padx=10, pady=10)
-    Button(button_frame, text="Edit exist", font=("Ink Free", 20)).grid(row=0, column=1, padx=10, pady=10)
+    # 设置两按键，分别对搜索的bol document进行编辑和添加info
+    Button(button_frame, text="Add new", command=lambda: add_new_info(bol, container),
+           font=("Ink Free", 20)).grid(row=0, column=0, padx=10, pady=10)
+    Button(button_frame, text="Edit exist", command=lambda: edit_exist_info(bol, container),
+           font=("Ink Free", 20)).grid(row=0, column=1, padx=10, pady=10)
 
     # Create Treeview显示title
     tree = ttk.Treeview(window, columns=("Customer", "Bol", "Container", 
@@ -247,6 +251,94 @@ def edit_add_window(bol, container):
     tree.pack(expand=YES, fill=BOTH)
 
     window.mainloop()
+
+#添加新info到ocument，eg： ups 几箱几板； 亚马逊 编号，卡派记录-----添加
+def add_new_info(bol, container):
+    window = Toplevel()
+    window.geometry("600x800")
+    window.title('添加信息')
+  
+    #find the input bol from mongodb
+    document_data = mdb.get_bol(bol)
+    
+    #显示添加的container信息
+    if document_data:
+        Label(window, text=f"Customer: {document_data.get('Customer', 'N/A')}",
+              font=("Ink Free", 20)).grid(row=0, column=0, sticky=W)
+        Label(window, text=f"Bol: {document_data.get('Bol', 'N/A')}",
+              font=("Ink Free", 20)).grid(row=1, column=0, sticky=W)
+        Label(window, text=f"Container: {document_data.get('Container', 'N/A')}",
+              font=("Ink Free", 20)).grid(row=2, column=0, sticky=W)
+        Label(window, text=f"ETA: {document_data.get('ETA', 'N/A')}",
+              font=("Ink Free", 20)).grid(row=3, column=0, sticky=W)
+    
+    #添加item到该container
+    Label(window, text="Name", font=("Ink Free", 20)).grid(row=4, column=0, sticky=W)
+    item_name = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_name.grid(row=4, column=1, sticky=W)
+    
+    Label(window, text="Count", font=("Ink Free", 20)).grid(row=5, column=0, sticky=W)
+    item_count = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_count.grid(row=5, column=1, sticky=W)
+
+    Label(window, text="Pallet", font=("Ink Free", 20)).grid(row=6, column=0, sticky=W)
+    item_pallet = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_pallet.grid(row=6, column=1, sticky=W)
+
+    Label(window, text="Note", font=("Ink Free", 20)).grid(row=7, column=0, sticky=W)
+    item_note = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_note.grid(row=7, column=1, sticky=W)
+
+    Label(window, text="Price", font=("Ink Free", 20)).grid(row=8, column=0, sticky=W)
+    item_price = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_price.grid(row=8, column=1, sticky=W)
+
+    Label(window, text="Cost", font=("Ink Free", 20)).grid(row=9, column=0, sticky=W)
+    item_cost = Text(window, bg = "light yellow", 
+                    font=("Ink Free", 25), height= 1, width=10, fg = "purple")
+    item_cost.grid(row=9, column=1, sticky=W)
+
+    Label(window, text="Status", font=("Ink Free", 20)).grid(row=10, column=0, sticky=W)
+    item_status = ttk.Combobox(window, values=["暂扣", "自提","已派送","改UPS", "改Ama", "客户下单"],)
+    item_status.grid(row=10, column=1, sticky=W)
+
+
+    item = Item()
+
+    def save_add():
+        # item.setName(item_name.get("1.0", "end-1c"))
+        # item.setCount(item_count.get("1.0", "end-1c"))
+        # item.setPallet(item_pallet.get("1.0", "end-1c"))
+        # item.setNote(item_note.get("1.0", "end-1c"))
+        # item.setPrice(item_price.get("1.0", "end-1c"))
+        # item.setCost(item_cost.get("1.0", "end-1c"))
+        # item.setStatus(item_status.get())
+        # mdb.add_item(bol, item)
+        window.destroy()
+        
+    save_add_btn = Button(window, text="Save", command= save_add, font=("Ink Free", 20))
+    save_add_btn.pack()
+
+
+
+
+
+    window.mainloop()
+    print("add new")
+
+#编辑现有document
+def edit_exist_info(bol, container):
+    window = Toplevel()
+    window.geometry("600x600")
+    window.title('编辑现有')
+
+    window.mainloop()
+    print("edit exist")
 
 #显示所有货柜记录 -----客户，MBL，柜，期，，备注，亚，UPS，其他
 def display_BOL(window):
