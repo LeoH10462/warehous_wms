@@ -80,6 +80,20 @@ class Item:
     def getStatus(self):
         return self.ItemStatus
     
+    #将Item object添加到list中
+    def to_dict(self):
+        return dict(
+            ItemName = self.ItemName,
+            ItemCount = self.ItemCount,
+            ItemPallet = self.ItemPallet,
+            ItemNote = self.ItemNote,
+            ItemCost = self.ItemCost,
+            ItemSale = self.ItemSale,
+            ItemVendor = self.ItemVendor,
+            ItemVendorInvoice = self.ItemVendorInvoice,
+            ItemStatus = self.ItemStatus
+        )
+    
     def __repr__(self):
         return f"{self.ItemName} {self.ItemCount}pc {self.ItemPallet}P \
 ${self.ItemCost} ${self.ItemSale} {self.ItemVendor}"

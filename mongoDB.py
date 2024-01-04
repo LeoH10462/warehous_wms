@@ -35,6 +35,19 @@ def insert_bol(Bol):
 
     client.close()
 
+#add item to bol at mongoDB
+def insert_item_to_bol(bol_number, item_dict):
+    client = get_client()
+    db = client['wms']
+    bol_collection = db['bol']
+
+    try:
+        result = bol_collection.update_one(
+            {"Bol": bol_number}, 
+            {"$push": {"Items": item_dict}})  
+    finally:
+        client.close()
+      
 
 def insert_bol_multiple(bol_number, container_number, eta, note, truck, customer):
 
@@ -59,7 +72,6 @@ def insert_bol_multiple(bol_number, container_number, eta, note, truck, customer
 
 # Delete Document 删------------------------------------------------------------
 ## 搜索BOL号，删除对应的bol
-
 def delete_bol(bol_number):
 
     client = get_client()
@@ -221,6 +233,7 @@ def get_bol_container(bol, container):
         return document
     finally:
         client.close()
+
 
 # return document by bol number 在pre_view window 中使用
 def get_bol(bol):

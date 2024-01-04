@@ -18,7 +18,6 @@ db = client['wms']
 bol_collection = db['bol']
 
 # Create Document 增------------------------------------------------------------
-
 def insert_bol(bol_number, container_number, eta, note, truck, customer):
     docu01 = {
         "Bol": bol_number,  # Keys in quotes
@@ -35,7 +34,6 @@ def insert_bol(bol_number, container_number, eta, note, truck, customer):
 
 # Delete Document 删------------------------------------------------------------
 ## 搜索BOL号，删除对应的bol
-
 def delete_bol(bol_number):
     result01 = bol_collection.delete_one({"BOL": bol_number})
 
@@ -56,8 +54,8 @@ def delete_container(container_number):
     else:
         print("No document found with Container number", container_number)
 
-# update document 改------------------------------------------------------------
 
+# update document 改------------------------------------------------------------
 def update_bol(bol_number):
 
     # 1. 改当前info, 用 $set

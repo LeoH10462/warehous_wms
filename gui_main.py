@@ -311,21 +311,19 @@ def add_new_info(bol, container):
     item = Item()
 
     def save_add():
-        # item.setName(item_name.get("1.0", "end-1c"))
-        # item.setCount(item_count.get("1.0", "end-1c"))
-        # item.setPallet(item_pallet.get("1.0", "end-1c"))
-        # item.setNote(item_note.get("1.0", "end-1c"))
-        # item.setPrice(item_price.get("1.0", "end-1c"))
-        # item.setCost(item_cost.get("1.0", "end-1c"))
-        # item.setStatus(item_status.get())
-        # mdb.add_item(bol, item)
+        item.setName(item_name.get("1.0", "end-1c"))
+        item.setCount(item_count.get("1.0", "end-1c"))
+        item.setPallet(item_pallet.get("1.0", "end-1c"))
+        item.setNote(item_note.get("1.0", "end-1c"))
+        item.setSale(item_price.get("1.0", "end-1c"))
+        item.setCost(item_cost.get("1.0", "end-1c"))
+        item.setStatus(item_status.get())
+        item_dict = item.to_dict()
+        mdb.insert_item_to_bol(bol, item_dict)
         window.destroy()
         
     save_add_btn = Button(window, text="Save", command= save_add, font=("Ink Free", 20))
-    save_add_btn.pack()
-
-
-
+    save_add_btn.grid(row=11, column=0, columnspan=2, pady=10)
 
 
     window.mainloop()
@@ -375,6 +373,7 @@ def pre_view_window():
     pre_view_windo.title("Pre-Table View")
     pre_view_windo.geometry("1000x600")
 
+
     # Customize the Treeview Style
     style = ttk.Style()
     style.configure("Treeview", background="white", fieldbackground="white")
@@ -419,12 +418,67 @@ def pre_view_window():
 
 
 # 详细：显示所有货柜记录 -----查看pos_table, 客户，MBL，柜，备注，每个item明细，数量，几板
-# 需要经过edit window才能查看!!
 def pos_view_window():
 
-    pre_view_windo = Tk()
-    pre_view_windo.title("Post-Table View")
-    print("post view")
+    pos_view_window = Tk()
+    pos_view_window.title("Post-Table View")
+    pos_view_window.geometry("1000x600")
+
+    # Customize the Treeview Style
+    style = ttk.Style()
+    style.configure("Treeview", background="white", fieldbackground="white")
+
+    # Create Treeview
+    tree = ttk.Treeview(pos_view_window, columns=("Customer", "Bol", "Container", 
+                                                 "ItemName", "ItemPallet" ), show='headings')
+
+    # Configure Treeview columns
+    tree.heading('Customer', text='Customer')
+    tree.heading('Bol', text='MBL')
+    tree.heading('Container', text='Container')
+    tree.heading('ItemName', text='Item Name')
+    tree.heading('ItemPallet', text='Item Pallet')
+
+
+    tree.column('Customer', stretch=YES, minwidth=50, width=100)
+    tree.column('Bol', stretch=YES, minwidth=50, width=100)
+    tree.column('Container', stretch=YES, minwidth=50, width=100)
+    tree.column('ItemName', stretch=YES, minwidth=50, width=100)
+    tree.column('ItemPallet', stretch=YES, minwidth=50, width=100)
+
+    
+
+    #get all data from MongoDB
+    bol_data = mdb.get_all_bols()
+    
+    # Insert data into Treeview
+    for bol in bol_data:
+        bol_id = tree.insert("", 'end', values=(str(bol.get('Customer', '')), str(bol.get('Bol', '')), str(bol.get('Container', '')), "", ""))
+        for item in bol.get('Items', []):
+            tree.insert(bol_id, 'end', values=("", "", "", str(item.get('ItemName', '')), str(item.get('ItemPallet', ''))))
+        tree.item(bol_id, open=True)  # Expand the parent row
+        # # Insert the BOL as a parent row
+        # bol_id = tree.insert("", 'end', values=(bol.get('Customer', ''), 
+        #                                         bol.get('Bol', ''), 
+        #                                         bol.get('Container', ''), 
+        #                                         "", ""))
+        # print(bol)
+        # # Insert each item as a child row
+        # for item in bol.get('Items', []):
+        #     print("Inserting item:", item)
+        #     tree.insert(bol_id, 'end', values=("", "", "", 
+        #                                        item.get('ItemName', ''), 
+        #                                        item.get('ItemPallet', '')))
+
+
+    # Add a scrollbar
+    scrollbar = ttk.Scrollbar(pos_view_window, orient="vertical", command=tree.yview)
+    scrollbar.pack(side='right', fill='y')
+    tree.configure(yscrollcommand=scrollbar.set)
+
+    tree.pack(expand=YES, fill=BOTH)
+    pos_view_window.mainloop()
+    
 
 #对应 new_window 按键-新增
 new_button = Button(window, text="NEW",
@@ -439,7 +493,6 @@ edit_button = Button(window, text="EDIT",
                     height=6,
                     command=search_window)
 edit_button.place(x=700, y=100)
-
 
 
 #对应 pre_view_window 按键-查看
