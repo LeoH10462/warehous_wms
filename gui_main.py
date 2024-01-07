@@ -111,8 +111,8 @@ def new_window():
     #创建save 按键将上述输入内容保存
     def save_close():
         myBol.setCustomer(cmb_customer.get())
-        myBol.setMbl(text_bol.get("1.0", END).strip())
-        myBol.setContainer(text_container.get("1.0", END).strip())
+        myBol.setMbl(text_bol.get("1.0", END).strip().upper())
+        myBol.setContainer(text_container.get("1.0", END).strip().upper())
         myBol.setEta(date_eta.get())
         myBol.setTruck(cmb_truck.get())
         myBol.setNote(text_note.get("1.0", END).strip())
@@ -170,8 +170,8 @@ def search_window():
     bol_search.pack()
 
     def search_button():
-        bol = bol_search.get("1.0", END).strip()
-        container = container_search.get("1.0", END).strip()
+        bol = bol_search.get("1.0", END).strip().upper()
+        container = container_search.get("1.0", END).strip().upper()
 
         #搜索 bol和柜号
         #found = mdb.search_bol_container(bol, container)  
@@ -453,23 +453,15 @@ def pos_view_window():
     
     # Insert data into Treeview
     for bol in bol_data:
-        bol_id = tree.insert("", 'end', values=(str(bol.get('Customer', '')), str(bol.get('Bol', '')), str(bol.get('Container', '')), "", ""))
+        bol_id = tree.insert("", 'end', values=(str(bol.get('Customer', '')), 
+                                                str(bol.get('Bol', '')), 
+                                                str(bol.get('Container', '')), 
+                                                "", ""))
         for item in bol.get('Items', []):
-            tree.insert(bol_id, 'end', values=("", "", "", str(item.get('ItemName', '')), str(item.get('ItemPallet', ''))))
+            tree.insert(bol_id, 'end', values=("", "", "", 
+                                               str(item.get('ItemName', '')), 
+                                               str(item.get('ItemPallet', ''))))
         tree.item(bol_id, open=True)  # Expand the parent row
-        # # Insert the BOL as a parent row
-        # bol_id = tree.insert("", 'end', values=(bol.get('Customer', ''), 
-        #                                         bol.get('Bol', ''), 
-        #                                         bol.get('Container', ''), 
-        #                                         "", ""))
-        # print(bol)
-        # # Insert each item as a child row
-        # for item in bol.get('Items', []):
-        #     print("Inserting item:", item)
-        #     tree.insert(bol_id, 'end', values=("", "", "", 
-        #                                        item.get('ItemName', ''), 
-        #                                        item.get('ItemPallet', '')))
-
 
     # Add a scrollbar
     scrollbar = ttk.Scrollbar(pos_view_window, orient="vertical", command=tree.yview)
