@@ -429,22 +429,28 @@ def pos_view_window():
     style.configure("Treeview", background="white", fieldbackground="white")
 
     # Create Treeview
-    tree = ttk.Treeview(pos_view_window, columns=("Customer", "Bol", "Container", 
-                                                 "ItemName", "ItemPallet" ), show='headings')
+    tree = ttk.Treeview(pos_view_window, columns=("Customer", "Bol", "Container","ETA","Note", 
+                                                 "ItemName", "ItemPallet","ItemStatus" ), show='headings')
 
     # Configure Treeview columns
     tree.heading('Customer', text='Customer')
     tree.heading('Bol', text='MBL')
     tree.heading('Container', text='Container')
+    tree.heading('ETA', text='ETA')
+    tree.heading('Note', text='Note')
     tree.heading('ItemName', text='Item Name')
     tree.heading('ItemPallet', text='Item Pallet')
+    tree.heading('ItemStatus', text='Item Status')
 
 
     tree.column('Customer', stretch=YES, minwidth=50, width=100)
     tree.column('Bol', stretch=YES, minwidth=50, width=100)
     tree.column('Container', stretch=YES, minwidth=50, width=100)
+    tree.column('ETA', stretch=YES, minwidth=50, width=100)
+    tree.column('Note', stretch=YES, minwidth=50, width=100)
     tree.column('ItemName', stretch=YES, minwidth=50, width=100)
     tree.column('ItemPallet', stretch=YES, minwidth=50, width=100)
+    tree.column('ItemStatus', stretch=YES, minwidth=50, width=100)
 
     
 
@@ -455,12 +461,15 @@ def pos_view_window():
     for bol in bol_data:
         bol_id = tree.insert("", 'end', values=(str(bol.get('Customer', '')), 
                                                 str(bol.get('Bol', '')), 
-                                                str(bol.get('Container', '')), 
+                                                str(bol.get('Container', '')),
+                                                str(bol.get('ETA', '')), 
+                                                str(bol.get('Note', '')),
                                                 "", ""))
         for item in bol.get('Items', []):
-            tree.insert(bol_id, 'end', values=("", "", "", 
+            tree.insert(bol_id, 'end', values=("", "", "", "", "",
                                                str(item.get('ItemName', '')), 
-                                               str(item.get('ItemPallet', ''))))
+                                               str(item.get('ItemPallet', '')),
+                                               str(item.get('ItemStatus',''))))
         tree.item(bol_id, open=True)  # Expand the parent row
 
     # Add a scrollbar
