@@ -102,14 +102,14 @@ ${self.ItemCost} ${self.ItemSale} {self.ItemVendor}"
 class Bol():
     #一条货柜的后端处理基本信息，货柜号，提单号，ETA，拖柜卡车公司，备注，客户，货物列表
     def __init__(self, container='', mbl='', eta='', dateTime="", truck='', 
-                note='', customer=''):
+                note=None, customer=''):
         
         self.Container = container
         self.MBL = mbl
         self.ETA = eta # 预计到达日
         self.DateTime = dateTime #柜子到仓日 or 卸柜日
         self.Truck = truck
-        self.Note = note
+        self.Note = note if note is not None else []
         self.Customer = customer
         self.Items = []
         self.Ama_num =0
@@ -168,10 +168,13 @@ class Bol():
     
     # note 备注
     def setNote(self, note):
-        self.Note = note
+        self.Note.append(note)
 
     def getNote(self):
         return self.Note
+    
+    def getNotesAsString(self):
+        return "\n".join(self.Note)  # Join all notes into a single string separated by semicolons
     
     # ama_num ama数量
     def setAma_num(self, ama_num=0):
