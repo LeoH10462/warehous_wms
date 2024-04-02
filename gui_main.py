@@ -480,6 +480,26 @@ def pos_view_window():
     tree.pack(expand=YES, fill=BOTH)
     pos_view_window.mainloop()
     
+def drop_shipping_window():
+
+    pos_view_window = Tk()
+    pos_view_window.title("Post-Table View")
+    pos_view_window.geometry("1000x600")
+    # Customize the Treeview Style
+    style = ttk.Style()
+    style.configure("Treeview", background="white", fieldbackground="white")
+
+    # Create Treeview
+    tree = ttk.Treeview(pos_view_window, columns=("Customer", "Bol", "Container","ETA","Note", 
+                                                 "ItemName", "ItemPallet","ItemStatus" ), show='headings')
+    # Add a scrollbar
+    scrollbar = ttk.Scrollbar(pos_view_window, orient="vertical", command=tree.yview)
+    scrollbar.pack(side='right', fill='y')
+    tree.configure(yscrollcommand=scrollbar.set)
+
+    tree.pack(expand=YES, fill=BOTH)
+    pos_view_window.mainloop()
+
 
 #对应 new_window 按键-新增
 new_button = Button(window, text="NEW",
@@ -509,5 +529,12 @@ view_button = Button(window, text="POST VIEW",
                     height=6,
                     command=pos_view_window)
 view_button.place(x=700, y=400)
+
+#对应 pos_view_window 按键-查看
+view_button = Button(window, text="Drop shipping",
+                    width=50,
+                    height=6,
+                    command=drop_shipping_window)
+view_button.place(x=100, y=700)
 
 window.mainloop()
